@@ -1,4 +1,4 @@
-use clap::Parser;
+use std::env::args;
 
 use crate::{
     dicts::{baidu::BaiduDict, caiyun::CaiyunDict, youdao::YoudaoDict},
@@ -8,19 +8,10 @@ use crate::{
 mod dicts;
 mod translator;
 
-#[derive(Parser, Debug)]
-struct Args {
-    #[clap(short, long)]
-    r#type: Option<String>,
-    #[clap(short, long)]
-    content: String,
-}
-
 #[tokio::main]
 async fn main() {
-    dotenv::dotenv().unwrap();
-    let args = Args::parse();
-    let content = args.content;
+    let args: Vec<String> = args().into_iter().collect();
+    let content = &args[1];
     let youdao = YoudaoDict::new(&content);
     let caiyun = CaiyunDict::new(&content);
     let baidu = BaiduDict::new(&content);
